@@ -67,8 +67,6 @@ var (
 	inputProfileName     string
 	inputCredentialsPath string
 
-	region string
-
 	// For get session token
 	serialNumber string
 	token        string
@@ -90,8 +88,6 @@ var (
 func init() {
 	rootCmd.PersistentFlags().StringVar(&inputProfileName, "input-profile-name", "", "input profile name (required)")
 	rootCmd.PersistentFlags().StringVar(&inputCredentialsPath, "input-credentials-path", "", "input credentials path (required)")
-
-	rootCmd.PersistentFlags().StringVar(&region, "region", "", "region (required)")
 
 	rootCmd.PersistentFlags().StringVar(&outputProfileName, "output-profile-name", "", "output profile name (required)")
 	rootCmd.PersistentFlags().StringVar(&outputCredentialsPath, "output-credentials-path", "", "output credentials path (required)")
