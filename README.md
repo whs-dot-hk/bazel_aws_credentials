@@ -46,6 +46,7 @@ credentials(
 
 ### Use `:output_credentials`
 ```sh
+# Clean up expired credentials
 rm -rf bazel-bin
 # Unlock gopass
 gopass my-prod
