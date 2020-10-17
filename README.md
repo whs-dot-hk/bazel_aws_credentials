@@ -54,7 +54,7 @@ credentials(
 ### Build `:output_credentials`
 ```sh
 # Clean up expired credentials
-rm -rf bazel-bin
+rm -rf bazel-out/k8-fastbuild/bin
 # Unlock gopass
 gopass my-prod
 bazel build //:output_credentials
