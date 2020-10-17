@@ -10,13 +10,13 @@ aws_secret_access_key = ...
 ```
 
 ### Update `BUILD`
-Replace `[aws-account-id]` and `[aws-iam-username]`
+Replace `[aws-account-id]`, `[aws-iam-username]` and `[aws-iam-role-name]`
 ```starlark
 BUILD
 ---
 ...
 
-load("profile.bzl", "credentials", "get_session_token", "profile")
+load("profile.bzl", "assume_role", "credentials", "get_session_token", "profile")
 load("otp.bzl", "gopass_otp")
 
 gopass_otp(
@@ -36,10 +36,17 @@ get_session_token(
     token = ":my-prod-token",
 )
 
+assume_role(
+    name = "my-prod-role",
+    profile = ":my-prod-sts",
+    role_arn = "arn:aws:iam::[aws-account-id]:role/[aws-iam-role-name]",
+)
+
 credentials(
     name = "output_credentials",
     profiles = [
         ":my-prod-sts",
+        ":my-prod-role",
     ],
 )
 ```

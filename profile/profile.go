@@ -33,6 +33,22 @@ func run(cmd *cobra.Command, args []string) {
 			log.Fatal(err)
 		}
 		outputCredentials = result.Credentials
+	case "assume-role":
+		input := &sts.AssumeRoleInput{
+			DurationSeconds: aws.Int64(3600),
+			RoleArn:         aws.String(roleArn),
+			RoleSessionName: aws.String("bazelAwsCredentialsSession"),
+		}
+		if serialNumber != "" && token != "" {
+			input.SerialNumber = aws.String(serialNumber)
+			input.TokenCode = aws.String(token)
+		}
+
+		result, err := svc.AssumeRole(input)
+		if err != nil {
+			log.Fatal(err)
+		}
+		outputCredentials = result.Credentials
 	}
 
 	const profileTemplate = `[{{.Name}}]
@@ -67,9 +83,12 @@ var (
 	inputProfileName     string
 	inputCredentialsPath string
 
-	// For get session token
+	// For get session token and assume role
 	serialNumber string
 	token        string
+
+	// For assume role
+	roleArn string
 
 	// Output credentials
 	outputProfileName     string
@@ -81,6 +100,11 @@ var (
 
 	getSessionTokenCmd = &cobra.Command{
 		Use: "get-session-token",
+		Run: run,
+	}
+
+	assumeRoleCmd = &cobra.Command{
+		Use: "assume-role",
 		Run: run,
 	}
 )
@@ -106,7 +130,15 @@ func init() {
 	getSessionTokenCmd.MarkFlagRequired("serial-number")
 	getSessionTokenCmd.MarkFlagRequired("token")
 
+	assumeRoleCmd.Flags().StringVar(&roleArn, "role-arn", "", "role arn (required)")
+
+	assumeRoleCmd.Flags().StringVar(&serialNumber, "serial-number", "", "serial number")
+	assumeRoleCmd.Flags().StringVar(&token, "token", "", "token")
+
+	assumeRoleCmd.MarkFlagRequired("role-arn")
+
 	rootCmd.AddCommand(getSessionTokenCmd)
+	rootCmd.AddCommand(assumeRoleCmd)
 }
 
 func main() {
