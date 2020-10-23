@@ -43,7 +43,7 @@ def _get_session_token_impl(ctx):
         inputs = [ctx.file.profile],
         outputs = [output_credentials],
         arguments = [ctx.executable._profile.path, "get-session-token", args],
-        executable = ctx.executable.token,
+        executable = ctx.executable.otp,
         tools = [ctx.executable._profile],
         use_default_shell_env = True,
     )
@@ -74,7 +74,7 @@ get_session_token = rule(
         "serial_number": attr.string(
             mandatory = True,
         ),
-        "token": attr.label(
+        "otp": attr.label(
             allow_files = True,
             executable = True,
             cfg = "host",
@@ -97,7 +97,7 @@ def _assume_role_impl(ctx):
 
     args.add("--role-arn", ctx.attr.role_arn)
 
-    is_mfa = ctx.attr.serial_number != "" and ctx.attr.token != None
+    is_mfa = ctx.attr.serial_number != "" and ctx.attr.otp != None
 
     if is_mfa:
         args.add("--serial-number", ctx.attr.serial_number)
@@ -106,7 +106,7 @@ def _assume_role_impl(ctx):
             inputs = [ctx.file.profile],
             outputs = [output_credentials],
             arguments = [ctx.executable._profile.path, "assume-role", args],
-            executable = ctx.executable.token,
+            executable = ctx.executable.otp,
             tools = [ctx.executable._profile],
             use_default_shell_env = True,
         )
@@ -145,7 +145,7 @@ assume_role = rule(
             mandatory = True,
         ),
         "serial_number": attr.string(),
-        "token": attr.label(
+        "otp": attr.label(
             allow_files = True,
             executable = True,
             cfg = "host",

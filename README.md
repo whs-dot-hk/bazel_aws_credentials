@@ -20,7 +20,7 @@ load("profile.bzl", "assume_role", "credentials", "get_session_token", "profile"
 load("otp.bzl", "gopass_otp")
 
 gopass_otp(
-    name = "my-prod-token",
+    name = "my-prod-otp",
     entry = "Account/aws.amazon.com/my-prod",
 )
 
@@ -33,7 +33,7 @@ get_session_token(
     name = "my-prod-sts",
     profile = ":my-prod",
     serial_number = "arn:aws:iam::[aws-account-id]:mfa/[aws-iam-username]",
-    token = ":my-prod-token",
+    otp = ":my-prod-otp",
 )
 
 assume_role(
