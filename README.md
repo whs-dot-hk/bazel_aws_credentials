@@ -90,6 +90,7 @@ load("otp.bzl", "kpcli_otp")
 kpcli_otp(
     name = "test-otp",
     kdb = ":test.kdbx",
+    # pwfile contains the master password of test.kdbx
     pwfile = ":password",
     entry = "Internet/test",
 )
