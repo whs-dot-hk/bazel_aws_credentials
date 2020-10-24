@@ -53,7 +53,9 @@ for i in 1 2 3; do otp "$@" && break || sleep 5; done""" % (kdb_file_path, pwfil
 
     return [
         DefaultInfo(
-            runfiles = ctx.runfiles(),
+            runfiles = ctx.runfiles(
+                files = [ctx.file.kdb, ctx.file.pwfile],
+            ),
         ),
     ]
 
