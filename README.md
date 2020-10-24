@@ -82,3 +82,15 @@ docker run -it --entrypoint= $docker_run_flags amazon/aws-cli:2.0.54 aws s3 ls -
 ```sh
 unset docker_run_flags
 ```
+
+## Kpcli
+```starlark
+load("otp.bzl", "kpcli_otp")
+
+kpcli_otp(
+    name = "test-otp",
+    kdb = ":test.kdbx",
+    pwfile = ":password",
+    entry = "Internet/test",
+)
+```
