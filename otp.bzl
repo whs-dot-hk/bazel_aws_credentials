@@ -76,3 +76,66 @@ kpcli_otp = rule(
         ),
     },
 )
+
+def _kpotp_otp_impl(ctx):
+    runfiles_path = "$0.runfiles/"
+
+    kpotp_file_root = runfiles_path + ctx.workspace_name + "/"
+
+    kpotp_exe = ctx.attr._kpotp.files_to_run.executable
+
+    kpotp_file_path = kpotp_file_root + kpotp_exe.short_path
+
+    kdbx_file_path = kpotp_file_root + ctx.file.kdbx.path
+    password_file_file_path = kpotp_file_root + ctx.file.password_file.path
+
+    command = """
+otp() {
+token=$(%s --kdbx=%s --password-file=%s --entry=%s)
+"$@" --token $token
+}
+
+for i in 1 2 3; do otp "$@" && break || sleep 5; done""" % (kpotp_file_path, kdbx_file_path, password_file_file_path, ctx.attr.entry)
+
+    ctx.actions.write(
+        output = ctx.outputs.executable,
+        content = command,
+        is_executable = True,
+    )
+
+    runfiles = ctx.runfiles(files = [
+        kpotp_exe,
+        ctx.file.kdbx,
+        ctx.file.password_file,
+    ])
+
+    runfiles = runfiles.merge(ctx.attr._kpotp.default_runfiles)
+
+    return [
+        DefaultInfo(
+            runfiles = runfiles,
+        ),
+    ]
+
+kpotp_otp = rule(
+    implementation = _kpotp_otp_impl,
+    executable = True,
+    attrs = {
+        "entry": attr.string(
+            mandatory = True,
+        ),
+        "kdbx": attr.label(
+            mandatory = True,
+            allow_single_file = True,
+        ),
+        "password_file": attr.label(
+            mandatory = True,
+            allow_single_file = True,
+        ),
+        "_kpotp": attr.label(
+            executable = True,
+            cfg = "host",
+            default = "//kpotp",
+        ),
+    },
+)
