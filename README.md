@@ -60,6 +60,52 @@ gopass my-prod
 bazel build //:output_credentials
 ```
 
+# Quick guide
+
+[Create `Passwords.kdbx`](keepassxc.md)
+
+```sh
+git clone https://github.com/whs-dot-hk/bazel_aws_credentials.git
+cd bazel_aws_credentials
+tee -a credentials > /dev/null <<EOF
+[my-prod]
+aws_access_key_id = ...
+aws_secret_access_key = ...
+EOF
+echo "newpassword" > password.txt
+tee -a BUILD > /dev/null <<EOF
+load("profile.bzl", "credentials", "get_session_token", "profile")
+load("otp.bzl", "kpotp_otp")
+
+kpotp_otp(
+    name = "my-prod-otp",
+    kdbx = ":Passwords.kdbx",
+    password_file = ":password.txt",
+    entry = "my-prod",
+)
+
+profile(
+    name = "my-prod",
+    credentials = ":credentials",
+)
+
+get_session_token(
+    name = "my-prod-sts",
+    profile = ":my-prod",
+    serial_number = "arn:aws:iam::[aws-account-id]:mfa/[aws-iam-username]",
+    otp = ":my-prod-otp",
+)
+
+credentials(
+    name = "output_credentials",
+    profiles = [
+        ":my-prod-sts",
+    ],
+)
+EOF
+bazel build //:output_credentials
+```
+
 # Docker
 ```sh
 docker pull amazon/aws-cli:2.0.54
