@@ -60,21 +60,21 @@ gopass my-prod
 bazel build //:output_credentials
 ```
 
-## Using docker
-```sh
-docker_run_flags=-v$(pwd)/bazel-bin/output_credentials:/my_aws_credentials\ -eAWS_SHARED_CREDENTIALS_FILE=/my_aws_credentials
-```
-
+# Docker
 ```sh
 docker pull amazon/aws-cli:2.0.54
 ```
 
-### Get caller identity
+```sh
+docker_run_flags=-v$(pwd)/bazel-bin/output_credentials:/my_aws_credentials\ -eAWS_SHARED_CREDENTIALS_FILE=/my_aws_credentials
+```
+
+## Get caller identity
 ```sh
 docker run -it --entrypoint= $docker_run_flags amazon/aws-cli:2.0.54 aws sts get-caller-identity --profile=my-prod-sts
 ```
 
-### List s3
+## List s3
 ```sh
 docker run -it --entrypoint= $docker_run_flags amazon/aws-cli:2.0.54 aws s3 ls --profile=aqt-prod-sts --region=ap-east-1
 ```
