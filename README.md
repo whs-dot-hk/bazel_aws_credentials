@@ -1,6 +1,6 @@
-## Get started
+# Getting started
 
-### Create `credentials`
+## Create `credentials`
 ```text
 credentials
 ---
@@ -9,7 +9,7 @@ aws_access_key_id = ...
 aws_secret_access_key = ...
 ```
 
-### Update `BUILD`
+## Update `BUILD`
 Replace `[aws-account-id]`, `[aws-iam-username]` and `[aws-iam-role-name]`
 ```starlark
 BUILD
@@ -51,7 +51,7 @@ credentials(
 )
 ```
 
-### Build `:output_credentials`
+## Build `:output_credentials`
 ```sh
 # Clean up expired credentials
 rm -rf bazel-out/k8-fastbuild/bin
@@ -60,7 +60,7 @@ gopass my-prod
 bazel build //:output_credentials
 ```
 
-### Using docker
+## Using docker
 ```sh
 docker_run_flags=-v$(pwd)/bazel-bin/output_credentials:/my_aws_credentials\ -eAWS_SHARED_CREDENTIALS_FILE=/my_aws_credentials
 ```
@@ -69,12 +69,12 @@ docker_run_flags=-v$(pwd)/bazel-bin/output_credentials:/my_aws_credentials\ -eAW
 docker pull amazon/aws-cli:2.0.54
 ```
 
-#### Get caller identity
+### Get caller identity
 ```sh
 docker run -it --entrypoint= $docker_run_flags amazon/aws-cli:2.0.54 aws sts get-caller-identity --profile=my-prod-sts
 ```
 
-#### List s3
+### List s3
 ```sh
 docker run -it --entrypoint= $docker_run_flags amazon/aws-cli:2.0.54 aws s3 ls --profile=aqt-prod-sts --region=ap-east-1
 ```
@@ -83,7 +83,7 @@ docker run -it --entrypoint= $docker_run_flags amazon/aws-cli:2.0.54 aws s3 ls -
 unset docker_run_flags
 ```
 
-## Kpcli
+# Kpcli
 ```starlark
 load("otp.bzl", "kpcli_otp")
 
