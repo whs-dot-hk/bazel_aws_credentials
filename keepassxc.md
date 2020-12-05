@@ -1,6 +1,6 @@
 ![Welcome screen](keepassxc-1-welcome-screen.png)
 
-Create new database
+# Create new database
 
 ![New database](keepassxc-2-new-database.png)
 
@@ -19,7 +19,7 @@ enter
 enter
 ```
 
-Create new entry
+# Create new entry
 
 ![New entry](keepassxc-3-new-entry.png)
 
@@ -29,6 +29,8 @@ ctrl-n
 # Title
 my-prod
 ```
+
+# Setup otp
 
 ![Otp](keepassxc-4-otp.png)
 
