@@ -65,14 +65,18 @@ bazel build //:output_credentials
 [Create `Passwords.kdbx`](keepassxc.md)
 
 ```sh
+# Clone bazel_aws_credentials
 git clone https://github.com/whs-dot-hk/bazel_aws_credentials.git
 cd bazel_aws_credentials
+# Append credentials
 tee -a credentials > /dev/null <<EOF
 [my-prod]
 aws_access_key_id = ...
 aws_secret_access_key = ...
 EOF
+# Create password.txt
 echo "newpassword" > password.txt
+# Append BUILD
 tee -a BUILD > /dev/null <<EOF
 load("profile.bzl", "credentials", "get_session_token", "profile")
 load("otp.bzl", "kpotp_otp")
@@ -103,6 +107,7 @@ credentials(
     ],
 )
 EOF
+# Build output_credentials
 bazel build //:output_credentials
 ```
 
