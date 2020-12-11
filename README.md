@@ -78,6 +78,7 @@ EOF
 echo "newpassword" > password.txt
 # Append BUILD
 tee -a BUILD > /dev/null <<EOF
+
 load("profile.bzl", "credentials", "get_session_token", "profile")
 load("otp.bzl", "kpotp_otp")
 
@@ -108,7 +109,11 @@ credentials(
 )
 EOF
 # Build output_credentials
+tee build.sh > /dev/null <<EOF
+rm -rf bazel-out/k8-fastbuild/bin
 bazel build //:output_credentials
+EOF
+sh build.sh
 ```
 
 # Docker
