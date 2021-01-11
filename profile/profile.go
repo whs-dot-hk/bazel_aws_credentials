@@ -119,8 +119,6 @@ func init() {
 	rootCmd.MarkPersistentFlagRequired("input-profile-name")
 	rootCmd.MarkPersistentFlagRequired("input-credentials-path")
 
-	rootCmd.MarkPersistentFlagRequired("region")
-
 	rootCmd.MarkPersistentFlagRequired("output-profile-name")
 	rootCmd.MarkPersistentFlagRequired("output-credentials-path")
 
